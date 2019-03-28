@@ -1,0 +1,104 @@
+{% extends 'dashboard_layout_inf.html' %}
+{{ super() }}
+{% block body %}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="content-header">Campaigns - My Campaigns</div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">List</h4>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th scope="col"><b style="font-weight: 500; font-size:16px;">Campaign</b></th>
+                                <th scope="col"><b style="font-weight: 500; font-size:16px;">Status</b></th>
+                                <th scope="col"><b style="font-weight: 500; font-size:16px;">Start</b></th>
+                                <th scope="col"><b style="font-weight: 500; font-size:16px;">End</b></th>
+                                <th scope="col"><b style="font-weight: 500; font-size:16px;">Channels</b></th>
+                                <th scope="col"><b style="font-weight: 500; font-size:16px;">Countries</b></th>
+                                <th scope="col"><b style="font-weight: 500; font-size:16px;">Influencers</b></th>
+                                <th scope="col"><b style="font-weight: 500; font-size:16px;">Budget</b></th>
+                                <th scope="col"><b style="font-weight: 500; font-size:16px;">ROI</b></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for item in view_campaign_data %}
+                            <tr>
+                                <td>
+                                    <a href="/viewCampaignDetails/{{ item['campaign_id'] }}">{{ item['campaign_name']
+                                        }}</a>
+                                    {% if item['status'] == 'Proposal Sent' %}
+                                    <!--{{ item['status'] }}-->
+
+                                    {% elif item['status'] == 'Current Partner' %}
+                                    <!--{{ item['status'] }}-->
+
+                                    {% else %}
+                                    <a href="/editCampaign/{{ item['campaign_id'] }}"><img src="/static/icons/edit.png"
+                                                                                           height="14px"
+                                                                                           width="13px"></a>
+                                    <a href="/deleteCampaign/{{ item['campaign_id'] }}"><img
+                                            src="/static/icons/delete.png"
+                                            height="14px" width="13px"></a>
+                                    {% endif %}
+
+                                </td>
+
+                                <td>
+                        <span class="{{ item['campaign_status'] }}" data-toggle="tooltip"
+                              title="{{ item['campaign_status'] }}"></span>
+                                    <!--{{ item['campaign_status'] }}-->
+                                </td>
+
+                                <td>{{ item['from_date'] }}</td>
+                                <td>{{ item['to_date'] }}</td>
+                                <td>
+                                    {% set channels = item['channels'].split(',') %}
+                                    {% for channel in channels %}
+                                    {% if channel == 'youtube' %}
+                                    <a href="#" class="fa fa-youtube-square"></a>
+                                    {% elif channel == 'facebook' %}
+                                    <a href="#" class="fa fa-facebook-square"></a>
+                                    {% elif channel == 'twitter' %}
+                                    <a href="#" class="fa fa-twitter-square"></a>
+                                    {% elif channel == 'instagram' %}
+                                    <a href="#" class="fa fa-instagram"></a>
+                                    {% endif %}
+                                    {% endfor %}
+                                </td>
+                                <td>
+                                    {% for region_name in item['region_name_list'] %}
+                                    {{ region_name }},
+                                    {% endfor %}
+                                </td>
+                                <td>{{ item['no_of_influencers'] }}
+                                    <span class="float-right text muted">
+                                <a onclick="searchInfluencers('{{ item['campaign_name'] }}','{{ item['campaign_id'] }}','{{ item['channels'] }}','{{ item['video_cat_name'] }}','{{ item['min_lower_followers'] }}','{{ item['max_upper_followers'] }}','{{ item['regions'] }}')"
+                                   class="fa fa-user-plus black" data-toggle="modal" data-target="#create_alert_modal"
+                                   data-tooltip="true" title="Add Influencer" style="font-size:20px;"></a>
+                                        <!--<button class="btn btn-sm btn-outline-secondary fa fa-user-plus"></button>-->
+                        </span>
+                                </td>
+                                <td>{{ item['budget'] }} {{ item['currency'] }}</td>
+                                <td>Coming Soon</td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
